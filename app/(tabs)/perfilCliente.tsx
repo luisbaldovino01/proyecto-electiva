@@ -10,19 +10,12 @@ import {
     ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { doc, collection, getDocs, query, where, writeBatch } from "firebase/firestore";
+import { db, auth } from "../../firebaseConfig";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-// =========================
-// OPCIONES DE GÉNERO
-// =========================
-
 const GENEROS = ["Masculino", "Femenino", "Otro", "Prefiero no decir"];
-
-// =========================
-// PANTALLA
-// =========================
 
 export default function PerfilCliente() {
 
@@ -30,14 +23,9 @@ export default function PerfilCliente() {
     const [loading, setLoading] = useState(true);
     const [guardando, setGuardando] = useState(false);
 
-    // Campos editables
     const [nombre, setNombre] = useState("");
     const [genero, setGenero] = useState("");
     const [correo, setCorreo] = useState("");
-
-    // =========================
-    // CARGAR DATOS
-    // =========================
 
     const cargarUsuario = useCallback(async () => {
         try {
@@ -72,13 +60,25 @@ export default function PerfilCliente() {
 
         setGuardando(true);
         try {
-            await updateDoc(doc(db, "Usuarios", usuario.id), {
+            const batch = writeBatch(db);
+
+            batch.update(doc(db, "Usuarios", usuario.id), {
                 usuario_nombre: nombre.trim(),
                 genero,
                 correo: correo.trim(),
             });
 
-            // Actualizar AsyncStorage
+            const solicitudesSnap = await getDocs(
+                query(collection(db, "solicitudes"), where("clienteId", "==", usuario.id))
+            );
+            solicitudesSnap.forEach(solicitudDoc => {
+                batch.update(doc(db, "solicitudes", solicitudDoc.id), {
+                    clienteNombre: nombre.trim(),
+                });
+            });
+
+            await batch.commit();
+
             const actualizado = {
                 ...usuario,
                 usuario_nombre: nombre.trim(),
@@ -98,8 +98,32 @@ export default function PerfilCliente() {
     };
 
     // =========================
-    // VISTA
+    // CERRAR SESIÓN
     // =========================
+
+    const cerrarSesion = () => {
+        Alert.alert(
+            "Cerrar sesión",
+            "¿Estás seguro de que deseas cerrar sesión?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                {
+                    text: "Cerrar sesión",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await auth.signOut();
+                            await AsyncStorage.removeItem("usuario");
+                            router.replace("/login");
+                        } catch (error) {
+                            console.log(error);
+                            Alert.alert("Error", "No se pudo cerrar sesión.");
+                        }
+                    }
+                }
+            ]
+        );
+    };
 
     if (loading) {
         return (
@@ -124,11 +148,10 @@ export default function PerfilCliente() {
                 <Text style={styles.rolHeader}>Cliente</Text>
             </View>
 
-            {/* SECCIÓN: INFORMACIÓN PERSONAL */}
+            {/* INFORMACIÓN PERSONAL */}
             <View style={styles.seccion}>
                 <Text style={styles.seccionTitulo}>Información personal</Text>
 
-                {/* NOMBRE */}
                 <Text style={styles.fieldLabel}>Nombre completo</Text>
                 <View style={styles.inputContainer}>
                     <Ionicons name="person-outline" size={18} color="#888" style={styles.inputIcon} />
@@ -141,7 +164,6 @@ export default function PerfilCliente() {
                     />
                 </View>
 
-                {/* CORREO */}
                 <Text style={styles.fieldLabel}>Correo electrónico</Text>
                 <View style={styles.inputContainer}>
                     <Ionicons name="mail-outline" size={18} color="#888" style={styles.inputIcon} />
@@ -156,31 +178,23 @@ export default function PerfilCliente() {
                     />
                 </View>
 
-                {/* GÉNERO */}
                 <Text style={styles.fieldLabel}>Género</Text>
                 <View style={styles.generosGrid}>
                     {GENEROS.map(g => (
                         <Pressable
                             key={g}
-                            style={[
-                                styles.generoOption,
-                                genero === g && styles.generoOptionActivo,
-                            ]}
+                            style={[styles.generoOption, genero === g && styles.generoOptionActivo]}
                             onPress={() => setGenero(g)}
                         >
-                            <Text style={[
-                                styles.generoText,
-                                genero === g && styles.generoTextActivo,
-                            ]}>
+                            <Text style={[styles.generoText, genero === g && styles.generoTextActivo]}>
                                 {g}
                             </Text>
                         </Pressable>
                     ))}
                 </View>
-
             </View>
 
-            {/* SECCIÓN: INFO NO EDITABLE */}
+            {/* CUENTA */}
             <View style={styles.seccion}>
                 <Text style={styles.seccionTitulo}>Cuenta</Text>
 
@@ -213,169 +227,69 @@ export default function PerfilCliente() {
                 }
             </Pressable>
 
+            {/* BOTÓN CERRAR SESIÓN */}
+            <Pressable style={styles.buttonCerrarSesion} onPress={cerrarSesion}>
+                <Ionicons name="log-out-outline" size={18} color="#C0392B" />
+                <Text style={styles.buttonCerrarSesionText}>Cerrar sesión</Text>
+            </Pressable>
+
         </ScrollView>
     );
 }
 
-// =========================
-// ESTILOS
-// =========================
-
 const styles = StyleSheet.create({
-    scroll: {
-        flex: 1,
-        backgroundColor: "#F5F7FB",
-    },
-    container: {
-        paddingTop: 60,
-        paddingHorizontal: 20,
-        paddingBottom: 60,
-    },
-    center: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-
-    // --- Avatar ---
-    avatarSection: {
-        alignItems: "center",
-        marginBottom: 28,
-    },
+    scroll: { flex: 1, backgroundColor: "#F5F7FB" },
+    container: { paddingTop: 60, paddingHorizontal: 20, paddingBottom: 60 },
+    center: { flex: 1, justifyContent: "center", alignItems: "center" },
+    avatarSection: { alignItems: "center", marginBottom: 28 },
     avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: "#E8F0FE",
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 12,
+        width: 100, height: 100, borderRadius: 50,
+        backgroundColor: "#E8F0FE", justifyContent: "center",
+        alignItems: "center", marginBottom: 12,
     },
-    nombreHeader: {
-        fontSize: 22,
-        fontWeight: "bold",
-        color: "#1B2431",
-    },
-    rolHeader: {
-        fontSize: 14,
-        color: "#888",
-        marginTop: 4,
-    },
-
-    // --- Secciones ---
+    nombreHeader: { fontSize: 22, fontWeight: "bold", color: "#1B2431" },
+    rolHeader: { fontSize: 14, color: "#888", marginTop: 4 },
     seccion: {
-        backgroundColor: "#FFF",
-        borderRadius: 16,
-        padding: 18,
-        marginBottom: 16,
-        elevation: 1,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
+        backgroundColor: "#FFF", borderRadius: 16, padding: 18,
+        marginBottom: 16, elevation: 1, shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3,
     },
     seccionTitulo: {
-        fontSize: 13,
-        fontWeight: "700",
-        color: "#4183DE",
-        textTransform: "uppercase",
-        letterSpacing: 0.8,
-        marginBottom: 16,
+        fontSize: 13, fontWeight: "700", color: "#4183DE",
+        textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 16,
     },
-
-    // --- Campos ---
-    fieldLabel: {
-        fontSize: 13,
-        color: "#888",
-        marginBottom: 6,
-        marginTop: 12,
-    },
+    fieldLabel: { fontSize: 13, color: "#888", marginBottom: 6, marginTop: 12 },
     inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#F5F7FB",
-        borderRadius: 10,
-        paddingHorizontal: 12,
-        borderWidth: 1,
-        borderColor: "#E5E7EB",
+        flexDirection: "row", alignItems: "center", backgroundColor: "#F5F7FB",
+        borderRadius: 10, paddingHorizontal: 12, borderWidth: 1, borderColor: "#E5E7EB",
     },
-    inputIcon: {
-        marginRight: 8,
-    },
-    input: {
-        flex: 1,
-        height: 46,
-        fontSize: 14,
-        color: "#1B2431",
-    },
-
-    // --- Género ---
-    generosGrid: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 8,
-        marginTop: 4,
-    },
+    inputIcon: { marginRight: 8 },
+    input: { flex: 1, height: 46, fontSize: 14, color: "#1B2431" },
+    generosGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
     generoOption: {
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 20,
-        borderWidth: 1.5,
-        borderColor: "#E5E7EB",
-        backgroundColor: "#F5F7FB",
+        paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20,
+        borderWidth: 1.5, borderColor: "#E5E7EB", backgroundColor: "#F5F7FB",
     },
-    generoOptionActivo: {
-        borderColor: "#4183DE",
-        backgroundColor: "#EFF6FF",
-    },
-    generoText: {
-        fontSize: 13,
-        color: "#888",
-        fontWeight: "500",
-    },
-    generoTextActivo: {
-        color: "#4183DE",
-        fontWeight: "700",
-    },
-
-    // --- Filas info no editable ---
+    generoOptionActivo: { borderColor: "#4183DE", backgroundColor: "#EFF6FF" },
+    generoText: { fontSize: 13, color: "#888", fontWeight: "500" },
+    generoTextActivo: { color: "#4183DE", fontWeight: "700" },
     filaInfo: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: "#F0F0F0",
+        flexDirection: "row", alignItems: "center", gap: 10,
+        paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: "#F0F0F0",
     },
-    filaInfoTexto: {
-        flex: 1,
-    },
-    filaLabel: {
-        fontSize: 12,
-        color: "#AAA",
-        marginBottom: 2,
-    },
-    filaValue: {
-        fontSize: 14,
-        color: "#333",
-        fontWeight: "500",
-    },
-
-    // --- Botón ---
+    filaInfoTexto: { flex: 1 },
+    filaLabel: { fontSize: 12, color: "#AAA", marginBottom: 2 },
+    filaValue: { fontSize: 14, color: "#333", fontWeight: "500" },
     button: {
-        backgroundColor: "#4183DE",
-        height: 52,
-        borderRadius: 14,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 8,
+        backgroundColor: "#4183DE", height: 52, borderRadius: 14,
+        justifyContent: "center", alignItems: "center", marginTop: 8,
     },
-    buttonDisabled: {
-        opacity: 0.6,
+    buttonDisabled: { opacity: 0.6 },
+    buttonText: { color: "#FFF", fontWeight: "700", fontSize: 16 },
+    buttonCerrarSesion: {
+        height: 52, borderRadius: 14, justifyContent: "center",
+        alignItems: "center", marginTop: 12, borderWidth: 1.5,
+        borderColor: "#C0392B", flexDirection: "row", gap: 8,
     },
-    buttonText: {
-        color: "#FFF",
-        fontWeight: "700",
-        fontSize: 16,
-    },
+    buttonCerrarSesionText: { color: "#C0392B", fontWeight: "700", fontSize: 16 },
 });
