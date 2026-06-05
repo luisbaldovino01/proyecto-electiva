@@ -5,6 +5,7 @@ export default function _layout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarActiveTintColor: "#4183DE",
       }}
     >
@@ -54,7 +55,6 @@ export default function _layout() {
       />
 
     </Tabs>
-
 
   );
 }
