@@ -22,6 +22,39 @@ export default function _layout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="perfilCliente"
+        options={{
+          title: "Perfil",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "home-sharp" : "home-outline"}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="reservasEstados"
+        options={{
+          title: "Reservas",
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "home-sharp" : "home-outline"}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+
     </Tabs>
+
+
   );
 }
