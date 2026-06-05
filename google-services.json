@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "225282402975",
+    "project_id": "bd-electiva-83186",
+    "storage_bucket": "bd-electiva-83186.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225282402975:android:55b3758fbd58bb094710aa",
+        "android_client_info": {
+          "package_name": "bd.electiva"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqg7pF9epPm1-K9jnauzJZ9Gz-gG5ay4A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
