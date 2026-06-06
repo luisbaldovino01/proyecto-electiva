@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, Text } from 'react-native';
 import { ProgressStep, ProgressSteps } from 'react-native-progress-steps';
 
 import { addDoc, collection } from "firebase/firestore";
@@ -186,11 +186,12 @@ export default function RegistroProfesional() {
                 {/* ========================= */}
 
                 <ProgressStep
-                    label='Datos personales'
+                    label='Paso 1'
                     onNext={validarDatosPersonales}
                     errors={erroresDatos}
                 >
 
+                    <Text style={{ fontWeight: "bold", fontSize: 30, marginBottom: 12 }}>Datos personales</Text>
                     <DatosPersonales
 
                         nombre={nombre}
@@ -219,11 +220,11 @@ export default function RegistroProfesional() {
                 {/* ========================= */}
 
                 <ProgressStep
-                    label='Especialidades'
+                    label='Paso 2'
                     onNext={validarEspecialidades}
                     errors={erroresEspecialidades}
                 >
-
+                    <Text style={{ fontWeight: "bold", fontSize: 30, marginBottom: 12 }}>Especialidades</Text>
                     <Especialidades
 
                         especialidad={especialidad}
@@ -243,7 +244,7 @@ export default function RegistroProfesional() {
                 {/* ========================= */}
 
                 <ProgressStep
-                    label='Identificación'
+                    label='Paso 3'
                     onNext={validarIdentificacion}
                     errors={erroresIdentificacion}
                 >
@@ -270,7 +271,7 @@ export default function RegistroProfesional() {
                 {/* ========================= */}
 
                 <ProgressStep
-                    label='Validación'
+                    label='Paso 4'
                     onSubmit={guardarProfesional}
                 >
 

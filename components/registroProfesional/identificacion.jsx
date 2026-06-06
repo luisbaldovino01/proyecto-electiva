@@ -1,19 +1,26 @@
-import { View, Text, Alert, Button, Image, StyleSheet } from "react-native";
+import { View, Text, Alert, Image, StyleSheet, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 
-export default function Identificacion({ 
-  fotoPerfil, setFotoPerfil,
-  cedulaFrontal, setCedulaFrontal,
-  cedulaTrasera, setCedulaTrasera,
-  certificado, setCertificado }
-) {
-
+export default function Identificacion({
+  fotoPerfil,
+  setFotoPerfil,
+  cedulaFrontal,
+  setCedulaFrontal,
+  cedulaTrasera,
+  setCedulaTrasera,
+  certificado,
+  setCertificado,
+}) {
   const pickImage = async (setter) => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      Alert.alert("Permisos requeridos", "Se requiere acceder a la galería");
+      Alert.alert(
+        "Permisos requeridos",
+        "Se requiere acceder a la galería"
+      );
       return;
     }
 
@@ -38,7 +45,10 @@ export default function Identificacion({
 
       if (!result.canceled) {
         const file = result.assets[0];
-        setCertificado({ name: file.name, uri: file.uri });
+        setCertificado({
+          name: file.name,
+          uri: file.uri,
+        });
       }
     } catch (error) {
       console.log("Error al escoger el archivo", error);
@@ -47,23 +57,101 @@ export default function Identificacion({
 
   return (
     <View style={styles.container}>
+      {/* FOTO PERFIL */}
+      <Text style={styles.label}>Foto de perfil</Text>
 
-      <Text>Foto de perfil</Text>
-      <Button title="Seleccionar foto" onPress={() => pickImage(setFotoPerfil)} />
-      {fotoPerfil && <Image source={{ uri: fotoPerfil }} style={styles.image} />}
+      <TouchableOpacity
+        style={styles.input}
+        onPress={() => pickImage(setFotoPerfil)}
+      >
+        <Text
+          style={[
+            styles.inputText,
+            !fotoPerfil && styles.placeholder,
+          ]}
+        >
+          {fotoPerfil ? "Imagen seleccionada" : "Seleccionar foto"}
+        </Text>
+      </TouchableOpacity>
 
-      <Text>Cédula frontal</Text>
-      <Button title="Seleccionar imagen" onPress={() => pickImage(setCedulaFrontal)} />
-      {cedulaFrontal && <Image source={{ uri: cedulaFrontal }} style={styles.image} />}
+      {fotoPerfil && (
+        <Image
+          source={{ uri: fotoPerfil }}
+          style={styles.image}
+        />
+      )}
 
-      <Text>Cédula trasera</Text>
-      <Button title="Seleccionar imagen" onPress={() => pickImage(setCedulaTrasera)} />
-      {cedulaTrasera && <Image source={{ uri: cedulaTrasera }} style={styles.image} />}
+      {/* CÉDULA FRONTAL */}
+      <Text style={styles.label}>Cédula frontal</Text>
 
-      <Text>Certificado</Text>
-      <Button title="Cargar certificado" onPress={pickDocument} />
-      {certificado && <Text>Archivo seleccionado: {certificado.name}</Text>}
+      <TouchableOpacity
+        style={styles.input}
+        onPress={() => pickImage(setCedulaFrontal)}
+      >
+        <Text
+          style={[
+            styles.inputText,
+            !cedulaFrontal && styles.placeholder,
+          ]}
+        >
+          {cedulaFrontal
+            ? "Imagen seleccionada"
+            : "Seleccionar imagen"}
+        </Text>
+      </TouchableOpacity>
 
+      {cedulaFrontal && (
+        <Image
+          source={{ uri: cedulaFrontal }}
+          style={styles.image}
+        />
+      )}
+
+      {/* CÉDULA TRASERA */}
+      <Text style={styles.label}>Cédula trasera</Text>
+
+      <TouchableOpacity
+        style={styles.input}
+        onPress={() => pickImage(setCedulaTrasera)}
+      >
+        <Text
+          style={[
+            styles.inputText,
+            !cedulaTrasera && styles.placeholder,
+          ]}
+        >
+          {cedulaTrasera
+            ? "Imagen seleccionada"
+            : "Seleccionar imagen"}
+        </Text>
+      </TouchableOpacity>
+
+      {cedulaTrasera && (
+        <Image
+          source={{ uri: cedulaTrasera }}
+          style={styles.image}
+        />
+      )}
+
+      {/* CERTIFICADO */}
+      <Text style={styles.label}>Certificado</Text>
+
+      <TouchableOpacity
+        style={styles.input}
+        onPress={pickDocument}
+      >
+        <Text
+          style={[
+            styles.inputText,
+            !certificado && styles.placeholder,
+          ]}
+          numberOfLines={1}
+        >
+          {certificado
+            ? certificado.name
+            : "Seleccionar archivo"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -71,12 +159,38 @@ export default function Identificacion({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffff",
-    gap: 20,
+    backgroundColor: "#fff",
+    gap: 12,
   },
+
+  label: {
+    fontSize: 14,
+    color: "#777",
+  },
+
+  input: {
+    height: 50,
+    paddingHorizontal: 15,
+    justifyContent: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "#E0E0E0",
+    width: "100%",
+  },
+
+  inputText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+
+  placeholder: {
+    color: "#C5C5C6",
+  },
+
   image: {
-    width: 200,
-    height: 200,
-    borderRadius: 8,
+    width: "100%",
+    height: 180,
+    borderRadius: 10,
+    marginTop: 4,
   },
 });

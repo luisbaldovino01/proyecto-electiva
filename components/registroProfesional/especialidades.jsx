@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { View, StyleSheet, TextInput } from 'react-native'
 import RNPickerSelect from "react-native-picker-select";
 
 export default function Especialidades({
@@ -8,8 +8,10 @@ export default function Especialidades({
 }) {
   return (
     <View style={styles.container}>
-      <Text>Especialidad</Text>
+      
       <RNPickerSelect
+        useNativeAndroidPickerStyle={false}
+        placeholder={{ label: "Especialidad", value: null }}
         value={especialidad}
         onValueChange={(value) => setEspecialidad(value)}
         items={[
@@ -22,10 +24,12 @@ export default function Especialidades({
           { label: "Remodelación", value: "remodelación" },
           { label: "Limpieza", value: "limpieza" },
         ]}
+        style={{ inputAndroid: styles.input, placeholder: { color: "#C5C5C6", fontSize: 18 } }}
       />
 
-      <Text>Experiencia</Text>
       <RNPickerSelect
+        useNativeAndroidPickerStyle={false}
+        placeholder={{ label: "Experiencia", value: null }}
         value={experiencia}
         onValueChange={(value) => setExperiencia(value)}
         items={[
@@ -36,15 +40,13 @@ export default function Especialidades({
           { label: "4 años", value: 4 },
           { label: "5 o más años", value: 5 },
         ]}
+        style={{ inputAndroid: styles.input, placeholder: { color: "#C5C5C6", fontSize: 18 } }}
       />
 
-      <Text>Descripción</Text>
-      <TextInput value={descripcion} onChangeText={setDescripcion} placeholder="Hable un poco sobre usted" style={styles.input} />
+      <TextInput value={descripcion} onChangeText={setDescripcion} placeholder="Descripción sobre usted" style={styles.input} />
     </View>
   )
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -54,11 +56,13 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderRadius: 8,
     paddingHorizontal: 15,
-    fontSize: 14,
-    backgroundColor: "#F3F3F3",
+    fontSize: 18,
     width: "100%",
     justifyContent: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "#E0E0E0",
+    color: "#333",
+    fontWeight: "bold"
   },
 })

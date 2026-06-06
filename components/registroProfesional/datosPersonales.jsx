@@ -16,7 +16,7 @@ const FechaNacimientoPicker = ({ fechaNacimiento, setFechaNacimiento }) => {
   };
 
   const formatDate = (date) => {
-    if (!date) return "Seleccione una fecha";
+    if (!date) return "Fecha de nacimiento";
 
     return new Date(date).toLocaleDateString("es-CO", {
       day: "2-digit",
@@ -32,7 +32,7 @@ const FechaNacimientoPicker = ({ fechaNacimiento, setFechaNacimiento }) => {
         style={styles.input}
         onPress={() => setMostrar(true)}
       >
-        <Text>{formatDate(fechaNacimiento)}</Text>
+        <Text style={{ color: fechaNacimiento ? "#333" : "#C5C5C6", fontSize: 18, fontWeight: "bold", }}>{formatDate(fechaNacimiento)}</Text>
       </TouchableOpacity>
 
       {mostrar && (
@@ -73,27 +73,48 @@ export default function DatosPersonales({
 
   return (
     <View style={styles.container}>
-
-      <Text>Nombre</Text>
       <TextInput
         style={styles.input}
         placeholder="Nombre completo"
+        placeholderTextColor="#C5C5C6"
         value={nombre}
         onChangeText={setNombre}
       />
 
-      <Text>Número de telefono</Text>
       <TextInput
-      keyboardType="numeric"
+        keyboardType="numeric"
         style={styles.input}
         placeholder="Número de telefono"
+        placeholderTextColor="#C5C5C6"
         value={numero}
         onChangeText={setNumero}
       />
 
-      <Text>Tipo de documento</Text>
+      <TextInput
+        placeholder="Número de documento"
+        placeholderTextColor="#C5C5C6"
+        keyboardType="numeric"
+        style={styles.input}
+        value={numeroDocumento}
+        onChangeText={setNumeroDocumento}
+      />
 
-      <RNPickerSelect
+      <FechaNacimientoPicker
+        fechaNacimiento={fechaNacimiento}
+        setFechaNacimiento={setFechaNacimiento}
+      />
+
+      <TextInput
+        placeholder="Dirección"
+        placeholderTextColor="#C5C5C6"
+        style={styles.input}
+        value={direccion}
+        onChangeText={setDireccion}
+      />
+
+      <RNPickerSelect 
+        useNativeAndroidPickerStyle={false}
+        placeholder={{ label: "Tipo de documento", value: null }}
         onValueChange={(value) => setTipoDocumento(value)}
         value={tipoDocumento}
         items={[
@@ -106,34 +127,8 @@ export default function DatosPersonales({
             value: "cedula_extranjeria"
           },
         ]}
+        style={{ inputAndroid: styles.input, placeholder: { color: "#C5C5C6", fontSize: 18 } }}
       />
-
-      <Text>Número de documento</Text>
-
-      <TextInput
-        placeholder="Número de documento"
-        keyboardType="numeric"
-        style={styles.input}
-        value={numeroDocumento}
-        onChangeText={setNumeroDocumento}
-      />
-
-      <Text>Fecha de nacimiento</Text>
-
-      <FechaNacimientoPicker
-        fechaNacimiento={fechaNacimiento}
-        setFechaNacimiento={setFechaNacimiento}
-      />
-
-      <Text>Dirección</Text>
-
-      <TextInput
-        placeholder="Dirección"
-        style={styles.input}
-        value={direccion}
-        onChangeText={setDireccion}
-      />
-
     </View>
   );
 }
@@ -147,11 +142,13 @@ const styles = StyleSheet.create({
 
   input: {
     height: 50,
-    borderRadius: 8,
     paddingHorizontal: 15,
-    fontSize: 14,
-    backgroundColor: "#F3F3F3",
+    fontSize: 18,
     width: "100%",
     justifyContent: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "#E0E0E0",
+    color: "#333",
+    fontWeight: "bold"
   },
 });

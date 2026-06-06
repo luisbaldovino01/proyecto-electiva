@@ -2,7 +2,7 @@ import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { router } from "expo-router";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { useRef, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { app, auth, db } from "./firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -170,29 +170,31 @@ export default function PhoneAuth({ mode }: Props) {
                 firebaseConfig={app.options}
             />
 
+            <Image source={require("./assets/vectors/vectorLogin.png")} style={{ position: "absolute", top: 0, width: "100%", height: 418 }} />
+
             {!confirmar ? (
                 <>
-                    <Text style={styles.welcomeText}>
-                        {mode === "login" ? "Inicia sesión" : "Regístrate"}
-                    </Text>
+                    <View style={{ paddingHorizontal: 20, top: "40%" }}>
+                        <Text style={styles.welcomeText}>
+                            {mode === "login" ? "Iniciar sesión" : "Regístrate"}
+                        </Text>
 
-                    <Text style={styles.subtitleText}>
-                        Ingresa tu número telefónico para continuar
-                    </Text>
+                        <TextInput
+                            style={styles.input}
+                            keyboardType="numeric"
+                            placeholder="Número telefónico"
+                            placeholderTextColor="#C5C5C6"
+                            value={telefono}
+                            onChangeText={setTelefono}
+                            maxLength={10}
+                        />
 
-                    <TextInput
-                        style={styles.input}
-                        keyboardType="numeric"
-                        placeholder="Número telefónico"
-                        placeholderTextColor="#C5C5C6"
-                        value={telefono}
-                        onChangeText={setTelefono}
-                        maxLength={10}
-                    />
+                        <Pressable style={styles.button} onPress={verificarNumero}>
+                            <Text style={styles.textButton}>Continuar</Text>
+                        </Pressable>
 
-                    <Pressable style={styles.button} onPress={verificarNumero}>
-                        <Text style={styles.textButton}>Continuar</Text>
-                    </Pressable>
+                    </View>
+
                 </>
             ) : (
                 <>
@@ -208,7 +210,6 @@ export default function PhoneAuth({ mode }: Props) {
                         style={styles.input}
                         keyboardType="numeric"
                         placeholder="Código de verificación"
-                        placeholderTextColor="#C5C5C6"
                         value={codigo}
                         onChangeText={setCodigo}
                         maxLength={6}
@@ -232,10 +233,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#ffff",
-        paddingHorizontal: 20,
-        paddingVertical: 80,
-        alignItems: "center",
-        gap: 20,
     },
     welcomeText: {
         color: "#424242",
@@ -244,15 +241,18 @@ const styles = StyleSheet.create({
     },
     subtitleText: {
         color: "#777777",
-        textAlign: "center",
     },
     input: {
         height: 50,
         borderRadius: 8,
         paddingHorizontal: 15,
-        fontSize: 14,
-        backgroundColor: "#F3F3F3",
+        fontSize: 18,
         width: "100%",
+        marginVertical: 20,
+        borderBottomWidth: 2,
+        borderBottomColor: "#E0E0E0",
+        color: "#333",
+        fontWeight: "bold"
     },
     button: {
         backgroundColor: "#4184DE",
@@ -261,6 +261,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 10,
+        marginTop: 230,
+        marginBottom: 10
+
     },
     textButton: {
         color: "#fff",
