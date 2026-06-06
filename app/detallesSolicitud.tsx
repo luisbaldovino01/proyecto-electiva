@@ -60,7 +60,7 @@ export default function DetallesSolicitud() {
         >
             {/* VOLVER */}
             <Pressable onPress={() => router.back()} style={styles.backButton}>
-                <Text style={styles.backText}>← Volver</Text>
+                <Text style={styles.backText}>Volver</Text>
             </Pressable>
 
             {/* HEADER */}

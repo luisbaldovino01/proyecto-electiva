@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 export default function LayoutProfesional() {
     return (
         <Tabs screenOptions={{
-            headerShown: false,
+            headerShown: false, 
             tabBarActiveTintColor: "#4183DE",
         }}>
             <Tabs.Screen
@@ -12,7 +12,10 @@ export default function LayoutProfesional() {
                 options={{
                     title: "Solicitudes",
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="list-outline" size={size} color={color} />
+                        <Ionicons 
+                        name="list-outline" 
+                        size={size} 
+                        color={color} />
                     ),
                 }}
             />
@@ -21,7 +24,22 @@ export default function LayoutProfesional() {
                 options={{
                     title: "Mis trabajos",
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="briefcase-outline" size={size} color={color} />
+                        <Ionicons 
+                        name="briefcase-outline" 
+                        size={size} 
+                        color={color} />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="perfilProfesional"
+                options={{
+                    title: "Perfil",
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons 
+                        name={focused ? "person" : "person-outline"} 
+                        size={24} 
+                        color={color} />
                     ),
                 }}
             />

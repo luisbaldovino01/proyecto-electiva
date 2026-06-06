@@ -79,7 +79,7 @@ export default function PerfilProfesionalPublico() {
             <View style={styles.center}>
                 <Text style={styles.errorText}>{error}</Text>
                 <Pressable onPress={() => router.back()}>
-                    <Text style={styles.backLink}>← Volver</Text>
+                    <Text style={styles.backLink}>Volver</Text>
                 </Pressable>
             </View>
         );
@@ -93,7 +93,7 @@ export default function PerfilProfesionalPublico() {
         >
             {/* VOLVER */}
             <Pressable onPress={() => router.back()} style={styles.backButton}>
-                <Text style={styles.backButtonText}>← Volver</Text>
+                <Text style={styles.backButtonText}>Volver</Text>
             </Pressable>
 
             {/* HEADER — foto, nombre, especialidad */}

@@ -191,7 +191,7 @@ export default function DetalleProfesional() {
           <Text style={styles.retryText}>Reintentar</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backText}>← Volver</Text>
+          <Text style={styles.backText}>Volver</Text>
         </TouchableOpacity>
       </View>
     );
@@ -207,7 +207,7 @@ export default function DetalleProfesional() {
     >
       {/* VOLVER */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>← Volver</Text>
+        <Text style={styles.backButtonText}>Volver</Text>
       </TouchableOpacity>
 
       {/* AVATAR + NOMBRE */}

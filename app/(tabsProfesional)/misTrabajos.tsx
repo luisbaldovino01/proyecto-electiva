@@ -194,10 +194,10 @@ export default function MisTrabajos() {
                         {item.descripcion}
                     </Text>
 
-                    <Text style={styles.info}>👤 {item.clienteNombre}</Text>
-                    <Text style={styles.info}>📞 {item.telefono}</Text>
+                    <Text style={styles.info}>{item.clienteNombre}</Text>
+                    <Text style={styles.info}>{item.telefono}</Text>
                     <Text style={styles.info}>
-                        📅 {new Date(item.fechaServicio).toLocaleDateString("es-CO", {
+                        {new Date(item.fechaServicio).toLocaleDateString("es-CO", {
                             day: "2-digit", month: "short", year: "numeric"
                         })}
                     </Text>

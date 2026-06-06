@@ -21,7 +21,7 @@ export default function _layout() {
               size={24}
             />
           ),
-        }}
+        }} 
       />
 
       <Tabs.Screen
@@ -31,7 +31,7 @@ export default function _layout() {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "home-sharp" : "home-outline"}
+              name={focused ? "person" : "person-outline"}
               color={color}
               size={24}
             />
@@ -46,7 +46,7 @@ export default function _layout() {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "home-sharp" : "home-outline"}
+              name={focused ? "calendar" : "calendar-outline"}
               color={color}
               size={24}
             />

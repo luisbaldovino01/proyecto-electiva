@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import {router} from "expo-router";
+import { router } from "expo-router";
 import type { ComponentProps } from "react";
 
 export default function Home() {
@@ -89,7 +89,6 @@ export default function Home() {
       <View style={styles.header}>
         <View style={styles.topRow}>
           <View style={styles.userInfo}>
-
             <View>
               <Text style={styles.title}>
                 ¡Hola, {nombreUsuario}!
@@ -104,13 +103,13 @@ export default function Home() {
       </View>
 
       <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-        <Text style={styles.titleCategoria}>Categorías</Text>
+        <Text style={styles.titleCategoria}>¿Qué necesitas?</Text>
         <View style={styles.categoriasContainer}>
           {servicios.map((item) => (
-            <Pressable 
-            key={item.id} 
-            style={styles.categoriaItem} 
-            onTouchEnd={()=> router.push({pathname: "/solicitud", params: {servicio: item.nombre,},})}>
+            <Pressable
+              key={item.id}
+              style={styles.categoriaItem}
+              onTouchEnd={() => router.push({ pathname: "/solicitud", params: { servicio: item.nombre, }, })}>
               <View
                 style={[
                   styles.iconContainer,
@@ -144,7 +143,9 @@ const styles = StyleSheet.create({
 
   titleCategoria: {
     color: "#1B2431",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 28,
+    marginBottom: 10
   },
 
   header: {
