@@ -198,30 +198,33 @@ export default function PhoneAuth({ mode }: Props) {
                 </>
             ) : (
                 <>
-                    <Text style={styles.titleSMS}>
-                        Ingresa el código SMS
-                    </Text>
+                    <View style={{ paddingHorizontal: 20, top: "40%" }}>
+                        <Text style={styles.titleSMS}>
+                            Ingrese el código
+                        </Text>
 
-                    <Text style={styles.subtitleText}>
-                        Enviado al +57 {telefono}
-                    </Text>
+                        <Text style={styles.subtitleText}>
+                            Enviado al +57 {telefono}
+                        </Text>
 
-                    <TextInput
-                        style={styles.input}
-                        keyboardType="numeric"
-                        placeholder="Código de verificación"
-                        value={codigo}
-                        onChangeText={setCodigo}
-                        maxLength={6}
-                    />
+                        <TextInput
+                            style={styles.input}
+                            keyboardType="numeric"
+                            placeholder="Código de verificación"
+                            value={codigo}
+                            onChangeText={setCodigo}
+                            maxLength={6}
+                        />
 
-                    <Pressable style={styles.button} onPress={confirmarCodigo}>
-                        <Text style={styles.textButton}>Verificar código</Text>
-                    </Pressable>
+                        <Pressable style={styles.button} onPress={confirmarCodigo}>
+                            <Text style={styles.textButton}>Verificar código</Text>
+                        </Pressable>
 
-                    <Pressable onPress={() => setConfirmar(null)}>
-                        <Text style={styles.linkText}>← Cambiar número</Text>
-                    </Pressable>
+                        <Pressable onPress={() => setConfirmar(null)}>
+                            <Text style={styles.linkText}>Cambiar número</Text>
+                        </Pressable>
+                    </View>
+
                 </>
             )}
 
@@ -241,6 +244,7 @@ const styles = StyleSheet.create({
     },
     subtitleText: {
         color: "#777777",
+        marginTop: 12
     },
     input: {
         height: 50,
@@ -277,5 +281,6 @@ const styles = StyleSheet.create({
         color: "#4184DE",
         fontSize: 14,
         marginTop: 4,
+        textAlign: "center"
     },
 });
